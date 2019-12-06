@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.wufan.dao.UserDao">
+	<sql id="tbUserColumns">
+		a.id,
+		a.username,
+		a.password,
+		a.phone,
+		a.email,
+		a.idcard,
+		a.address,
+		a.sex,
+		a.department,
+		a.education,
+		a.fork
+	</sql>
+	<select id="findByUsername" parameterType="string"
+		resultType="User">
+		SELECT * FROM tb_user_info WHERE username=#{username}
+	</select>
+	
+	<insert id="insert">
+		INSERT INTO tb_user_info (
+		`id`,
+		`username`,
+		`password`,
+		`phone`,
+		`email`,
+		`idcard`,
+		`address`,
+		`sex`,
+		`department`,
+		`education`,
+		`fork`
+		)
+		VALUES
+		(
+		#{id},
+		#{username},
+		#{password},
+		#{phone},
+		#{email},
+		#{idcard},
+		#{address},
+		#{sex},
+		#{department},
+		#{education},
+		#{fork}
+		);
+
+	</insert>
+	<delete id="deleteUsers">
+	DELETE FROM tb_user_info WHERE id in
+	<foreach item="id"  collection="list" separator=",">
+	 #{id}
+	 </foreach>
+	</delete>
+	<delete id="delete">
+		DELETE FROM tb_user_info WHERE id = #{id}
+	</delete>
+	<update id="update">
+	UPDATE tb_user_info
+SET 
+username = #{username},
+ password = #{password},
+ phone = #{phone},
+ email = #{email},
+ idcard = #{idcard},
+ address = #{address},
+ sex = #{sex},
+ department = #{department},
+ education = #{education},
+ fork = #{fork}
+WHERE
+	id = #{id};
+	</update>
+	
+	<select id="selectAll" resultType="User">
+		SELECT
+		<include refid="tbUserColumns" />
+		FROM
+		tb_user_info AS a
+	</select>
+	<select id="countAll" resultType="Integer">
+		SELECT
+		COUNT(*)
+		FROM
+		tb_user_info
+	</select>
+	<select id="search" resultType="User">
+		SELECT
+		<include refid="tbUserColumns" />
+		FROM
+		tb_user_info AS a
+		<where>
+			<if test="username != null and username != ''">
+				AND a.username LIKE CONCAT('%',#{username},'%')
+			</if>
+			<if test="phone != null and phone != ''">
+				AND a.phone LIKE CONCAT('%',#{phone},'%')
+			</if>
+			<if test="email != null and email != ''">
+				AND a.email LIKE CONCAT('%',#{email},'%')
+			</if>
+			<if test="address != null and address != ''">
+				AND a.address LIKE CONCAT('%',#{address},'%')
+			</if>
+			<if test="department != null and department != ''">
+				AND a.department LIKE CONCAT('%',#{department},'%')
+			</if>
+		</where>
+	</select>
+</mapper>
