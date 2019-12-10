@@ -23,18 +23,11 @@
         <property name="suffix" value=".jsp" />
     </bean>
     
-    <!--拦截器
-    <mvc:interceptors>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <mvc:exclude-mapping path="/static/**" />
-            <mvc:exclude-mapping path="/login" />
-            <bean class="com.wufan.web.LoginInterceptor"/>
-        </mvc:interceptor>
-        <mvc:interceptor>
-            <mvc:mapping path="/**"/>
-            <bean class="com.wufan.web.PermissionInterceptor"></bean>
-        </mvc:interceptor>
-    </mvc:interceptors>
-    -->
+    <!-- 配置文件上传解析器 -->
+    <bean id="multipartResolver"
+   class="org.springframework.web.multipart.commons.CommonsMultipartResolver"> 
+   <property name="defaultEncoding" value="utf-8" /> 
+   <property name="maxUploadSize" value="10485760000" /> 
+   <property name="maxInMemorySize" value="40960" /> 
+   </bean>
 </beans>

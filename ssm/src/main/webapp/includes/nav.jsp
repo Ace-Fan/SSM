@@ -5,9 +5,9 @@
 	<!--头部-->
 	<ul class="layui-nav layui-layout-left">
 		<li class="layui-nav-item">
-			<a href="${pageContext.request.contextPath}/user/index" class="layui-icon layui-icon-console" href="#">控制台</a>
+			<a href="${pageContext.request.contextPath}/user/index" class="layui-icon layui-icon-home" href="#">主页</a>
 		</li>
-		<li class="layui-nav-item">
+		<li class="layui-nav-item"> 
 			<a class="" href="${pageContext.request.contextPath}/user/list">用户信息管理</a>
 		</li>
 		<li class="layui-nav-item">

@@ -7,5 +7,5 @@
     <typeAliases>
         <package name="com.wufan.domain" />
     </typeAliases>
-
+    
 </configuration>

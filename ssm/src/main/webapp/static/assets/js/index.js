@@ -1,27 +1,27 @@
 layui.config({
 	base:'/ssm/static/assets/js/layui_exts/'
-}).use(['layer','laypage', 'table','jquery','excel','upload','carousel'],
+}).use(['layer','laypage', 'table','excel','upload','carousel','form'],
 				function(){
-					var $ = layui.jquery,
+					var $ = layui.$,
 					table = layui.table,
 					laypage = layui.laypage,
 					layer = layui.layer,
 					excel = layui.excel,
 					upload = layui.upload,
+					form = layui.form,
 					carousel = layui.carousel
-					
 					carousel.render({
 						elem: '#test1'
     ,width: '100%' //设置容器宽度
     ,arrow: 'always' //始终显示箭头
 					});
 					
-					
+					layer.msg('欢迎查看用户列表');
 					// 第一个表格
-					table.render({
+					var tableIns=table.render({
 						elem : '#users',
 						cellMinWidth : 130,
-						url : '/ssm/user/PaginationUser' // 数据接口
+						url : '/ssm/user/listData' // 数据接口
 						,
 						title : '用户表',
 						page : true // 开启分页
@@ -30,19 +30,19 @@ layui.config({
 						,
 						totalRow : true // 开启合计行
 						,
-						response : {
-							statusName : 'code',
-							statusCode : 200,
-							msgName : 'msg',
-							countName : 'count',
-							dataName : 'data'
-						},
+					    id:'idTest'
+					    ,
+					    done:function(res,curr,count){
+					     bindTableToolbarFunction();
+					    }
+					    ,
 						cols : [ [ // 表头
 						{
 							type : 'checkbox',
 							fixed : "left"
 						}, {
 							field : 'id',
+							width : 130,
 							title : 'ID',
 							sort : true,
 							fixed : 'left'
@@ -86,44 +86,48 @@ layui.config({
 							sort : true
 						}, {
 							fixed : 'right',
-							width : 230,
+							width : 300,
 							align : 'center',
 							toolbar : '#edit'
 						} ] ]
-						,page:true
-						,id:'typeReload'
+					});
+
+function bindTableToolbarFunction() {
+
+//导入
+             upload.render({
+						elem:'#upload'
+						,url:'/ssm/user/upload'
+						,accept:'file'
+						,exts:'xls|xlsx'
+						,done: function(json){
+							if(json.code == 0){
+							layer.msg("导入失败",{icon:5});
+							}else{
+							layer.msg("导入成功",{icon:6});
+							tableIns.reload('',{});
+							}
+						}
 					});
 					
+					//导出
+					$('#exportExcel').on('click',function(){
+						layer.confirm('是否导出此表格到本地?',{icon:3,title:'温馨提示'},function(index){
+ 				window.location.href="/ssm/excel/ExcelOut";
 					
-					var $ = layui.$,active = {
-						reload:function(){
-							var username = $('#username');
-							var phone = $('#phone');
-							var email = $('#email');
-							var address = $('#address');
-							var department = $('#department');
-							
-							table.reload('typeReload',{
-								page:{
-									curr:1
-								}
-								,where:{
-									username:username.val(),
-									phone:phone.val(),
-									email:email.val(),
-									address:address.val(),
-									department:department.val(),
-								}
-							},'data');
-						}
-					};
-		
-					$('#search').on('click',function(){
+ 				layer.close(index);
+ 			});
+ 			return false;	
+ 			});
+					//批量删除
+					$('#deleteUsers').on('click',function(){
 						var type = $(this).data('type');
 						active[type] ? active[type].call(this) :'';
 					});
 					
-					$(function () {
+}
+
+					/*$(function () {
     // 监听上传文件的事件
     $('#LAY-excel-import-excel').change(function (e) {
       // 注意：这里直接引用 e.target.files 会导致 FileList 对象在读取之前变化，导致无法弹出文件
@@ -144,7 +148,7 @@ layui.config({
 
   })
 					
-					function uploadExcel(files) {
+  function uploadExcel(files) {
   layui.use( ['excel', 'layer'], function () {
     var excel = layui.excel
     var layer = layui.layer
@@ -178,35 +182,101 @@ layui.config({
       	layer.alert(e.message)
       }
       });
-      }
-					$('#exportExcel').on('click',function(){
-					$.ajax({
+      }*/
+
+/*//搜索
+$('#search').on('click', function(data){
+	var field = data.field;
+tableIns.reload({
+ url:'/ssm/user/search'
+,page: {
+  curr: 1 //重新从第 1 页开始
+}
+,where:field
+});
+});*/
+                    //监听搜索
+    form.on('submit(LAY-user-back-search)', function(data){
+      var field = data.field;
+      lay
+      //执行重载
+      tableIns.reload({
+      url:'/ssm/user/search'
+      ,page: {
+  curr: 1 //重新从第 1 页开始
+       }
+      ,
+        where: field
+      });
+      return false;
+    });
+					var $ = layui.$,active={
+						getCheckData: function(){
+							var checkStatus = table.checkStatus('idTest')
+							,data = checkStatus.data; //获取选中的数据
+							if(data == ""){
+								layer.msg('请至少选择其中一项',{icon:2});
+								return;
+							}
+							var ids=""; //存入ID
+							if(data.length>0){  
+								for(var i =0;i<data.length;i++){ //将获取的选中行数据进行遍历
+								ids+=data[i].id+",";  //将ID存入数组
+							}
+							}
+							console.log(ids);
+							layer.confirm('确定要删除所选?',{icon:7,title:'删除提示'},function(index){
+								$.ajax({
+								type:"POST",
+								url:"/ssm/user/deleteUsers",
+								data:{'ids':ids},
+								success:function(result){
+									if(result == 1){
+										layer.close(index);
+										layer.msg("删除成功",{icon:6});
+										table.reload('idTest',{});
+									}else{
+										layer.msg("删除失败",{icon:5});
+									}
+								}
+							})
+							layer.close(index);
+							})
+							}
+					};
+				
+					
+					/*$.ajax({
 						url:"/ssm/user/listData",
 						dataType:'json',
 						success(res){
 							var data = res.data;
 							data = excel.filterExportData(data,{
-								address:'address',
-								department:'department',
-								education:'education',
-								email:'email',
-								fork:'fork',
 								id:'id',
-								idcard:'idcard',
+								username:'username',
 								password:'password',
 								phone:'phone',
+								email:'email',
+								idcard:'idcard',
+								address:'address',
 								sex:'sex',
-								username:'username'
+								department:'department',
+								education:'education',	
+								fork:'fork',
 							});
-							data.unshift({address:'籍贯',department:'部门',education:'学历',email:'396989406@qq.com',fork:'汉族',id:'用户id',idcard:'身份证号',password:'密码',phone:'手机号',sex:'性别',username:'用户名'});
+							data.unshift({id:'用户id',username:'用户名',password:'密码',phone:'手机号',email:'邮箱号',idcard:'身份证号',address:'籍贯',sex:'性别',department:'部门',education:'学历',fork:'汉族'});
+							layer.msg("导出成功",{icon:6});
 							excel.exportExcel(data,'用户信息列表.xlsx','xlsx');
 						}
 						,error(){
 							layer.alert('获取数据失败，请检查环境');
 						}
-					});
-					});
+					});*/
 					
+					//监听表格复选框选择
+  table.on('checkbox(test)', function(obj){
+    console.log(obj)
+  });
 
 					// 监听行工具事件
 					table.on('tool(test)', function(obj) {
@@ -216,18 +286,18 @@ layui.config({
 						if (layEvent === 'detail') {
 							layer.open({
 								type:2,
-								closeBtn:2,
+								skin: 'layui-layer-demo', //样式类名
+								closeBtn:1,
+								anim: 5,
 								title:'查看用户信息',
-								area:['450px','700px'],
-								shade:0.8,
-								id:(new Date()).valueOf(),
-								moveType:1,
+								area:['400px','650px'],
+								shadeClose: true, //开启遮罩关闭
 								content:'/ssm/user/details?id='+data.id+"&username="+data.username+"&password="+data.password+"&phone="+data.phone+
 								"&email="+data.email+"&idcard="+data.idcard+"&address="+encodeURI(encodeURI(data.address))+"&sex="+encodeURI(encodeURI(data.sex))+"&department="+encodeURI(encodeURI(data.department))+
 								"&education="+encodeURI(encodeURI(data.education))+"&fork="+encodeURI(encodeURI(data.fork))
 							});
 						} else if (layEvent === 'del') {
-							layer.confirm('真的删除行么', function(index) {
+							layer.confirm('真的删除这一行吗？',{icon:7,title:'删除提示'}, function(index) {
 								$.ajax({
 									type:"POST",
 									url:"/ssm/user/delete",
@@ -240,9 +310,7 @@ layui.config({
 											obj.del(); // 删除对应行（tr）的DOM结构
 											layer.close(index);// 向服务端发送删除指令
 											layer.msg("删除成功",{icon:6,time: 2000});
-											layer.closeAll();
-											window.location.reload();
-											Load();
+                                            table.reload('idTest',{});
 										}
 									},
 									error:function(){
@@ -251,25 +319,19 @@ layui.config({
 								});
 							});
 						} else if (layEvent === 'edit') {
-							layer.open({
-								type:2,
-								closeBtn:2,
-								title:'编辑用户信息',
-								area:['450px','700px'],
-								shade:0.8,
-								id:(new Date()).valueOf(),
-								moveType:1,
-								content:'/ssm/user/edit?id='+data.id+"&username="+data.username+"&password="+data.password+"&phone="+data.phone+
+						layer.open({
+							 type: 2,
+							  skin: 'layui-layer-demo', //样式类名
+							  title:'编辑用户信息',
+							  closeBtn: 1, //不显示关闭按钮
+							  anim: 5,
+							  area:['400px','650px'],
+							  shadeClose: true, //开启遮罩关闭
+						      content:'/ssm/user/edit?id='+data.id+"&username="+data.username+"&password="+data.password+"&phone="+data.phone+
 								"&email="+data.email+"&idcard="+data.idcard+"&address="+encodeURI(encodeURI(data.address))+"&sex="+encodeURI(encodeURI(data.sex))+"&department="+encodeURI(encodeURI(data.department))+
 								"&education="+encodeURI(encodeURI(data.education))+"&fork="+encodeURI(encodeURI(data.fork))
-							});
-						} else if (layEvent === 'download') {
-							layer.confirm('真的删除行么', function(index1) {
-								obj.del(); // 删除对应行（tr）的DOM结构
-								layer.close(index1);
-								// 向服务端发送删除指令
-							});
-						}
+						})
+						} 
 					});
 					
 					});

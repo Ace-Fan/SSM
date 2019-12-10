@@ -1,5 +1,4 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java"%>
-<%@ taglib prefix="form" uri="http://www.springframework.org/tags/form" %>
 <%@page pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html>
@@ -20,78 +19,79 @@
 				<legend style="text-align: center;"
 					class="layui-icon layui-icon-table">企业用户信息列表</legend>
 			</fieldset>
-			<form class="layui-form layui-form-pane" action="${pageContext.request.contextPath}/user/search" method="post">
+			<form class="layui-form">
 			<div class="layui-form-item" style="padding: 30px;">
 				<div class="layui-inline">
 					<div class="layui-input-inline">
-						<input type="text" name="username" id="username" lay-verify="title"
-							placeholder="请输入姓名" autocomplete="off" class="layui-input">
+						<input type="text" name="username" 
+							placeholder="请输入姓名" autocomplete="off" class="layui-input" maxlength="5">
 					</div>
 				</div>
 				<div class="layui-inline">
 					<div class="layui-input-inline">
-						<input type="tel" name="phone" id="phone"
-							lay-verify="required|phone" placeholder="请输入手机号"
-							autocomplete="off" class="layui-input">
+						<input type="text" name="phone"  placeholder="请输入手机号"
+							autocomplete="off" class="layui-input" maxlength="11">
 					</div>
 				</div>
 				<div class="layui-inline">
 					<div class="layui-input-inline">
-						<input type="text" name="email" id="email" lay-verify="email"
-							autocomplete="off" placeholder="请输入邮箱号" class="layui-input">
+						<input type="text" name="email"
+							autocomplete="off" placeholder="请输入邮箱号" class="layui-input" maxlength="20">
 					</div>
 				</div>
 				<div class="layui-inline">
 					<div class="layui-input-inline">
-						<input type="address" name="address" id="address" lay-verify="address"
-							autocomplete="off" placeholder="请输入籍贯信息" class="layui-input">
+						<input type="text" name="address" 
+							autocomplete="off" placeholder="请输入籍贯信息" class="layui-input" maxlength="10">
 					</div>
 				</div>
 				<div class="layui-inline">
 					<div class="layui-input-inline">
-						<input type="department" name="department" id="department" lay-verify="department"
-							autocomplete="off" placeholder="请输入所在部门" class="layui-input">
+						<select name="department">
+  <option value="">请选择部门</option>
+  <option value="">Web安全部</option>
+  <option value="">Java开发部</option>
+  <option value="">软件实施部</option>
+  <option value="">研发部</option>
+  <option value="">生产部</option>
+</select>
 					</div>
 				</div>
-				<div>
-					<button type="submit" lay-submit=""
-						class="layui-btn layui-btn-normal layui-icon layui-icon-search" data-type="reload" id="search">
-						搜索</button>
-					<button type="reset"
-						class="layui-btn layui-btn-warm layui-icon layui-icon-refresh">
-						重置</button>
-				</div>
+				 <div class="layui-inline">
+					<button class="layui-btn" lay-submit lay-filter="LAY-user-back-search">
+              <i class="layui-icon layui-icon-search">搜索</i></button>
+					<button type="reset" class="layui-btn layui-btn-warm"><i class="layui-icon layui-icon-refresh">重置</i></button>
+			</div>
 			</div>
 			</form>
-
-				<table id="users" class="layui-hide" lay-filter="test"></table>
+				<table id="users" class="layui-table" lay-filter="test"></table>
 				<script type="text/html" id="toolbarDemo">
   <div class="layui-btn-container">
-    <a href="${pageContext.request.contextPath}/user/form" type="button" class="layui-btn  layui-btn-normal layui-icon layui-icon-add-1" lay-event="getCheckData">新增</a>
-    <button type="button" class="layui-btn layui-btn-normal layui-icon layui-icon-upload-drag" id="LAY-excel-import-excel" multiple="multiple">导入</button>
-    <a type="button" lay-submit="" class="layui-btn  layui-btn-normal layui-icon layui-icon-download-circle" id="exportExcel"  lay-event="download">导出</a>
-    <a href="#" type="button" class="layui-btn  layui-btn-danger layui-icon layui-icon-delete" id="exportExcel" lay-filter="remove">批量删除</a>
+    <a href="${pageContext.request.contextPath}/user/form" type="button" class="layui-btn  layui-btn-normal"><i class="layui-icon layui-icon-add-1">新增</i></a>
+    <button type="button" class="layui-btn layui-btn-normal" id="upload"><i class="layui-icon layui-icon-upload-drag">导入</i></button>
+    <button type="button" lay-submit="" class="layui-btn  layui-btn-normal" id="exportExcel"><i class="layui-icon layui-icon-download-circle">导出</i></button>
+    <button type="button" class="layui-btn layui-btn-danger" id="deleteUsers" data-type="getCheckData"><i class="layui-icon layui-icon-delete">批量删除</i></button>
   </div>
 </script>
 
 				<script type="text/html" id="edit">
-						<a class="layui-btn layui-btn-normal layui-btn-sm layui-icon layui-icon-form" lay-event="detail">查看</a>
-						<a class="layui-btn layui-btn-warm layui-btn-sm layui-icon layui-icon-edit" lay-event="edit">编辑</a>
-						<a class="layui-btn layui-btn-danger layui-btn-sm layui-icon layui-icon-delete" lay-event="del">删除</a>
+						<button class="layui-btn layui-btn-normal layui-btn-sm" lay-event="detail"><i class="layui-icon layui-icon-form">查看</i></button>
+						<button class="layui-btn layui-btn-warm layui-btn-sm " lay-event="edit" href="${pageContext.request.contextPath}/user/edit"><i class="layui-icon layui-icon-edit">编辑</i></button>
+						<button class="layui-btn layui-btn-danger layui-btn-sm" lay-event="del"><i class="layui-icon layui-icon-delete">删除</i></button>
 					</script>
 			</div>
 			<jsp:include page="/includes/copyright.jsp" />
 		</div>
-	</div>
 	<script type="text/javascript"  src="https://cdn.bootcss.com/jquery/1.12.4/jquery.min.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/static/assets/layui/layui.all.js"></script>
 	<script type="text/javascript"
 		src="${pageContext.request.contextPath}/static/assets/js/index.js"></script>
 	<script>
-		layui.use([ 'layer', 'form' ], function() {
-			var layer = layui.layer, form = layui.form;
+		layui.use([ 'layer' ], function() {
+			var layer = layui.layer
 			layer.msg('欢迎查看用户列表');
+			
 		});
 	</script>
 </body>

@@ -6,7 +6,7 @@
     <head>
 <jsp:include page="/includes/header.jsp"/>
     </head>
-    <body>
+    <body class="layui-layout-body">
     	<div class="layui-main">
     	<form class="layui-form layui-form-pane" action="" method="">
 					<div class="layui-form-item">
