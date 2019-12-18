@@ -1,4 +1,4 @@
-package com.wufan.utils;
+package com.wufan.commons.utils;
 
 import java.io.InputStream;
 import java.math.BigDecimal;
@@ -19,7 +19,6 @@ public class ExcelUtils {
 	private final static String excel2003L = ".xls"; // 2003版本
 	private final static String excel2007U = ".xlsx"; // 2007版本
 
-	
 	/**
 	 * 获取IO流数据，组装List Object参数集合
 	 * 

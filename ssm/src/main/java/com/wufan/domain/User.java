@@ -1,9 +1,11 @@
 package com.wufan.domain;
 
+import java.io.Serializable;
+
 /**
  * 用户信息
  */
-public class User {
+public class User implements Serializable {
 	private Long id;
 	private String username;
 	private String password;
@@ -15,26 +17,11 @@ public class User {
 	private String department;
 	private String education;
 	private String fork;
+	private boolean isRemember;
 
 	// 构造函数
 	public User() {
 		super();
-	}
-
-	public User(Long id, String username, String password, String phone, String email, String idcard, String address,
-			String sex, String department, String education, String fork) {
-		super();
-		this.id = id;
-		this.username = username;
-		this.password = password;
-		this.phone = phone;
-		this.email = email;
-		this.idcard = idcard;
-		this.address = address;
-		this.sex = sex;
-		this.department = department;
-		this.education = education;
-		this.fork = fork;
 	}
 
 	public Long getId() {
@@ -123,6 +110,21 @@ public class User {
 
 	public void setFork(String fork) {
 		this.fork = fork;
+	}
+
+	public boolean isRemember() {
+		return isRemember;
+	}
+
+	public void setRemember(boolean isRemember) {
+		this.isRemember = isRemember;
+	}
+
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", username=" + username + ", password=" + password + ", phone=" + phone + ", email="
+				+ email + ", idcard=" + idcard + ", address=" + address + ", sex=" + sex + ", department=" + department
+				+ ", education=" + education + ", fork=" + fork + "]";
 	}
 
 }

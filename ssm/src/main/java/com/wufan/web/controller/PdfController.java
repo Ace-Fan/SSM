@@ -1,4 +1,4 @@
-package com.wufan.web;
+package com.wufan.web.controller;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -33,9 +33,9 @@ import com.itextpdf.text.pdf.PdfPRow;
 import com.itextpdf.text.pdf.PdfPTable;
 import com.itextpdf.text.pdf.PdfWriter;
 import com.itextpdf.text.pdf.draw.LineSeparator;
+import com.wufan.commons.utils.PDFUtils;
 import com.wufan.domain.User;
 import com.wufan.service.FileService;
-import com.wufan.utils.PDFUtils;
 
 @Controller
 @RequestMapping(value = "pdf")
@@ -46,6 +46,7 @@ public class PdfController {
 
 	/**
 	 * 用户信息导出为Pdf
+	 * 
 	 * @param request
 	 * @param response
 	 * @throws IOException
@@ -72,13 +73,14 @@ public class PdfController {
 		String LastPath = "D:/songw/用户列表水印版" + dateStr + ".pdf";
 
 		// 创建文件
-		Document document = new Document(PageSize.A4, PDFUtils.marginX, PDFUtils.marginX, PDFUtils.marginY, PDFUtils.marginY);
+		Document document = new Document(PageSize.A4, PDFUtils.marginX, PDFUtils.marginX, PDFUtils.marginY,
+				PDFUtils.marginY);
 
 		// 建立书写器
 		PdfWriter writer = PdfWriter.getInstance(document, new FileOutputStream(fullPath));
 
-		writer.setPageEvent(new PDFUtils(new String[]{"融通科技",dateStr}));
-		
+		writer.setPageEvent(new PDFUtils(new String[] { "融通科技", dateStr }));
+
 		// 打开文件
 		document.open();
 
@@ -88,7 +90,7 @@ public class PdfController {
 		 * document.add(new LineSeparator(1f, 100, BaseColor.GRAY, Element.ALIGN_CENTER,
 		 * -20f));
 		 */
-		
+
 		// 中文字体，解决中文不能显示问题
 		BaseFont bfChinese = BaseFont.createFont("C:/WINDOWS/Fonts/SIMYOU.TTF", BaseFont.IDENTITY_H,
 				BaseFont.NOT_EMBEDDED);

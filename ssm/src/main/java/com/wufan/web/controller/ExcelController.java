@@ -1,4 +1,4 @@
-package com.wufan.web;
+package com.wufan.web.controller;
 
 import java.io.IOException;
 import java.io.OutputStream;
@@ -43,6 +43,7 @@ public class ExcelController {
 
 	/**
 	 * 导入excel用户信息
+	 * 
 	 * @param file
 	 * @param request
 	 * @param response
@@ -68,6 +69,7 @@ public class ExcelController {
 
 	/**
 	 * 用户信息导出excel
+	 * 
 	 * @param headNames
 	 * @param colWidths
 	 * @param user
@@ -79,19 +81,24 @@ public class ExcelController {
 	@ResponseBody
 	public void ExcelOut(String[] headNames, int colWidths[], User user, HttpServletRequest request,
 			HttpServletResponse response) throws IOException {
+
 		// 创建时间函数
 		Date date = new Date();
 		DateFormat nomaldate = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		String dateStr = nomaldate.format(date);
 		String s = "用户信息列表";
+
 		// 创建一个文件名
 		String path = s + "-" + dateStr + ".xlsx";
+
 		// 从数据库中查出数据
 		List<HashMap<String, Object>> lists = fileService.ExcelOut(user);
-		String[] title = { "ID", "用户名", "密码", "手机号", "邮箱号", "身份证号", "籍贯", "性别", "部门", "学历", "民族" };// 设置EXCEL的第一行的标题头（改）
+		String[] title = { "ID", "用户名","密码","手机号", "邮箱号", "身份证号", "籍贯", "性别", "部门", "学历", "民族" };// 设置EXCEL的第一行的标题头（改）
+
 		// 创建excel工作薄
 		@SuppressWarnings("resource")
 		XSSFWorkbook workbook = new XSSFWorkbook();
+
 		// 创建一个工作表sheet
 		XSSFSheet sheet = workbook.createSheet("信息表1");
 		sheet.setColumnWidth(0, 2000);
@@ -105,6 +112,7 @@ public class ExcelController {
 		sheet.setColumnWidth(8, 3000);
 		sheet.setColumnWidth(9, 2000);
 		sheet.setColumnWidth(10, 2000);
+
 		// 创建表头
 		XSSFRow firstRow = sheet.createRow(0);
 		XSSFCell firstCell = firstRow.createCell(0);
@@ -122,6 +130,7 @@ public class ExcelController {
 		RegionUtil.setBorderRight(1, region, sheet);
 		sheet.addMergedRegion(region);
 		firstCell.setCellStyle(cellstyle);
+
 		// 创建第一行
 		XSSFRow row = sheet.createRow(3);
 		XSSFCell cell = null;
@@ -132,6 +141,7 @@ public class ExcelController {
 		row1.setBorderRight(BorderStyle.THIN);// 右边框
 		row1.setFillPattern(FillPatternType.SOLID_FOREGROUND);
 		row1.setFillForegroundColor(IndexedColors.GREY_40_PERCENT.index);
+
 		// 插入第一行数据 id
 		for (int i = 0; i < title.length; i++) {
 			// 创建一行的一格
@@ -141,6 +151,7 @@ public class ExcelController {
 			cell.setCellStyle(cellstyle);
 			cell.setCellStyle(row1);
 		}
+
 		// 追加数据行数
 		@SuppressWarnings("unused")
 		int j = 1;
@@ -150,10 +161,13 @@ public class ExcelController {
 		row2.setBorderBottom(BorderStyle.THIN);
 		HashMap<String, Object> list = null;
 		for (int i = 0; i < lists.size(); i++) {
+
 			// 从集合中得到一个对象
 			list = lists.get(i);
+
 			// 创建第2行
 			XSSFRow nextrow = sheet.createRow(i + 4);
+
 			// 创建第1列并赋值
 			XSSFCell cessk = nextrow.createCell(0);
 			cessk.setCellValue((Long) list.get("id"));
@@ -190,12 +204,18 @@ public class ExcelController {
 			cessk.setCellStyle(row2);
 			j++;
 		}
+
+		// 判断文件名是否存在
 		if (path.equals("")) {
 			response.getWriter().write("失败：参数为空！");
 			return;
 		}
+
+		// 设置客户端响应数据类型
 		response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=utf-8");// 自定义路径
 		response.setHeader("Content-disposition", "attachment;filename=" + new String((path).getBytes(), "iso-8859-1"));
+
+		// 读取文件绝对路径，输出文件
 		OutputStream ouputStream = null;
 		try {
 			ouputStream = response.getOutputStream();

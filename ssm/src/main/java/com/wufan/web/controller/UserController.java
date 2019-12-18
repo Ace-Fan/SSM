@@ -1,4 +1,4 @@
-package com.wufan.web;
+package com.wufan.web.controller;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 import com.alibaba.fastjson.JSONObject;
+import com.wufan.commons.utils.CookieUtils;
 import com.wufan.domain.User;
 import com.wufan.service.UserService;
 
@@ -30,38 +31,12 @@ public class UserController {
 	private UserService userService;
 
 	/**
-	 * 登录逻辑
-	 * @param username
-	 * @param password
-	 * @param httpServletRequest
-	 * @param httpServletResponse
-	 * @param model
-	 * @return
-	 */
-	@RequestMapping(value = "login", method = RequestMethod.POST)
-	public String login(@RequestParam(required = true) String username, @RequestParam(required = true) String password,
-			HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse, Model model) {
-
-		User user = userService.findUserByName(username);
-		// 失败
-		if (user == null || !user.getPassword().equals(password)) {
-			httpServletRequest.getSession().setAttribute("result", "-1");
-			return "/login";
-		}
-		// 成功
-		else {
-			// 将登录信息放入会话
-			httpServletRequest.getSession().setAttribute("user", user);
-			return "/index";
-		}
-	}
-
-	/**
 	 * 新增用户信息
+	 * 
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping(value = "/insert", produces = "text/html;charset=UTF-8")
+	@RequestMapping(value = "insert", produces = "text/html;charset=UTF-8")
 	@ResponseBody
 	public String insert(User user) {
 		JSONObject jsonObject = new JSONObject();
@@ -78,10 +53,11 @@ public class UserController {
 
 	/**
 	 * 更新用户信息
+	 * 
 	 * @param user
 	 * @return
 	 */
-	@RequestMapping("/update")
+	@RequestMapping("update")
 	@ResponseBody
 	public String update(User user) {
 		JSONObject jsonObject = new JSONObject();
@@ -98,10 +74,11 @@ public class UserController {
 
 	/**
 	 * 批量删除用户信息
+	 * 
 	 * @param userList
 	 * @return
 	 */
-	@RequestMapping(value = "/deleteUsers")
+	@RequestMapping(value = "deleteUsers")
 	@ResponseBody
 	public String deleteUsers(@RequestParam(value = "ids") String userList) {
 		String[] strs = userList.split(",");
@@ -115,6 +92,7 @@ public class UserController {
 
 	/**
 	 * 删除单个用户
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -129,6 +107,7 @@ public class UserController {
 
 	/**
 	 * 搜索用户信息
+	 * 
 	 * @param username
 	 * @param phone
 	 * @param email
@@ -138,7 +117,7 @@ public class UserController {
 	 * @param limit
 	 * @return
 	 */
-	@RequestMapping(value = "/search")
+	@RequestMapping(value = "search")
 	@ResponseBody
 	public Map<String, Object> queryAll(@RequestParam("username") String username, @RequestParam("phone") String phone,
 			@RequestParam("email") String email, @RequestParam("address") String address,
@@ -152,15 +131,16 @@ public class UserController {
 		map.put("data", list);
 		return map;
 	}
-	
+
 	/**
 	 * 查询出所有用户信息
+	 * 
 	 * @param pageNum
 	 * @param pageSize
 	 * @return
 	 * @throws Exception
 	 */
-	@RequestMapping(value = "/listData", produces = "text/html;charset=utf-8")
+	@RequestMapping(value = "listData", produces = "text/html;charset=utf-8")
 	@ResponseBody
 	public String selectAll(@RequestParam("page") Integer pageNum, @RequestParam("limit") Integer pageSize)
 			throws Exception {
@@ -173,69 +153,45 @@ public class UserController {
 		jsonObject.put("count", count);
 		return jsonObject.toString();
 	}
-	
+
 	/**
 	 * 跳转用户表单页面
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/form", method = RequestMethod.GET)
+	@RequestMapping(value = "form", method = RequestMethod.GET)
 	public String form() {
-		return "/form";
+		return "form";
 	}
 
 	/**
 	 * 跳转用户列表页面
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/list", method = RequestMethod.GET)
+	@RequestMapping(value = "list", method = RequestMethod.GET)
 	public String showAll() {
-		return "/list";
+		return "list";
 	}
 
 	/**
 	 * 跳转编辑用户页面
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/edit", method = RequestMethod.GET)
+	@RequestMapping(value = "edit", method = RequestMethod.GET)
 	public String edit() {
-		return "/edit";
+		return "edit";
 	}
 
 	/**
 	 * 跳转查看用户页面
+	 * 
 	 * @return
 	 */
-	@RequestMapping(value = "/details", method = RequestMethod.GET)
+	@RequestMapping(value = "details", method = RequestMethod.GET)
 	public String details() {
-		return "/details";
+		return "details";
 	}
 
-	/**
-	 * 注销登录
-	 * @param httpServletRequest
-	 * @return
-	 */
-	@RequestMapping(value = "/loginout", method = RequestMethod.GET)
-	public String loginout(HttpServletRequest httpServletRequest) {
-		httpServletRequest.getSession().invalidate();
-		return login();
-	}
-
-	/**
-	 * 跳转首页
-	 * @return
-	 */
-	@RequestMapping(value = "/index", method = RequestMethod.GET)
-	public String index() {
-		return "/index";
-	}
-
-	/**
-	 * 跳转登录页面
-	 * @return
-	 */
-	@RequestMapping(value = { "", "login" }, method = RequestMethod.GET)
-	public String login() {
-		return "/login";
-	}
 }

@@ -3,20 +3,24 @@ package com.wufan.dao;
 import java.util.HashMap;
 import java.util.List;
 import org.apache.ibatis.annotations.Param;
+import org.springframework.stereotype.Repository;
 
 import com.wufan.domain.User;
 
+@Repository
 public interface UserDao {
-	
+
 	/**
 	 * 根据用户名查询用户
+	 * 
 	 * @param username
 	 * @return
 	 */
 	User findByUsername(String username);
-	
+
 	/**
 	 * 根据id查询用户
+	 * 
 	 * @param id
 	 * @return
 	 */
@@ -24,30 +28,35 @@ public interface UserDao {
 
 	/**
 	 * 新增用户
+	 * 
 	 * @param user
 	 */
 	void insert(User user);
 
 	/**
 	 * 删除用户
+	 * 
 	 * @param id
 	 */
 	void delete(Long id);
 
 	/**
 	 * 批量删除用户
+	 * 
 	 * @param ids
 	 */
 	void deleteUsers(List<Integer> ids);
 
 	/**
 	 * 更新用户信息
+	 * 
 	 * @param user
 	 */
 	void update(User user);
 
 	/**
 	 * 搜索用户
+	 * 
 	 * @param username
 	 * @param phone
 	 * @param email
@@ -60,12 +69,14 @@ public interface UserDao {
 
 	/**
 	 * 查询所有用户
+	 * 
 	 * @return
 	 */
 	List<User> selectAll();
 
 	/**
 	 * 导出用户为excel
+	 * 
 	 * @param user
 	 * @return
 	 */
@@ -75,12 +86,14 @@ public interface UserDao {
 	// num);
 	/**
 	 * 计算用户总数
+	 * 
 	 * @return
 	 */
 	int countAll();
 
 	/**
 	 * 计算搜索的用户总数
+	 * 
 	 * @param username
 	 * @param phone
 	 * @param email
