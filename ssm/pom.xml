@@ -15,7 +15,7 @@
 		<jstl.version>1.2</jstl.version>
 		<aspectj.version>1.8.0</aspectj.version>
 		<mybatis.version>3.3.0</mybatis.version>
-		<mysql.version>5.1.26</mysql.version>
+		<mysql.version>8.0.16</mysql.version>
 		<druid.version>1.0.20</druid.version>
 		<pagehelper.version>5.1.4</pagehelper.version>
 		<converter.version>1.8.0</converter.version>
