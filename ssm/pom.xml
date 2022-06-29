@@ -19,7 +19,7 @@
 		<druid.version>1.0.20</druid.version>
 		<pagehelper.version>5.1.4</pagehelper.version>
 		<converter.version>1.8.0</converter.version>
-		<poi.version>3.17</poi.version>
+		<poi.version>4.1.1</poi.version>
 		<itextpdf.version>5.2.0</itextpdf.version>
 		<commons-beanutils.version>1.9.3</commons-beanutils.version>
 		<commons-fileupload.version>1.3.3</commons-fileupload.version>
